@@ -1,5 +1,2 @@
-/backend/vendor/
-/backend/var/
-/backend/.env.local
 node_modules/
 .env

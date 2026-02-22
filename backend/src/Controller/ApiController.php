@@ -16,16 +16,18 @@ class ApiController extends AbstractController
     #[Route('/api/movies', methods: ['GET'])]
     public function movies(TmdbService $tmdbService): JsonResponse
     {
-        $movies = $tmdbService->getTopRatedMovies();
-
-        return $this->json($movies);
+        return $this->json([
+            'status' => 'success',
+            'data' => $tmdbService->getTopRatedMovies()
+        ]);
     }
 
     #[Route('/api/tv', methods: ['GET'])]
     public function tv(TmdbService $tmdbService): JsonResponse
     {
-        $tv = $tmdbService->getTopRatedTv();
-
-        return $this->json($tv);
+        return $this->json([
+            'status' => 'success',
+            'data' => $tmdbService->getTopRatedTv()
+        ]);
     }
 }

@@ -22,35 +22,47 @@ class TmdbService
 
     public function getTopRatedMovies(): array
     {
-        $response = $this->client->request(
-            'GET',
-            'https://api.themoviedb.org/3/movie/top_rated',
-            [
-                'query' => [
-                    'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
-                    'page' => 1
+        try {
+            $response = $this->client->request(
+                'GET',
+                'https://api.themoviedb.org/3/movie/top_rated',
+                [
+                    'query' => [
+                        'api_key' => $this->apiKey,
+                        'language' => 'fr-FR',
+                        'page' => 1
+                    ]
                 ]
-            ]
-        );
+            );
 
-        return $response->toArray();
+            $data = $response->toArray();
+
+            return $data['results'] ?? [];
+
+        } catch (\Exception $e) {
+            return [];
+        }
     }
-
     public function getTopRatedTv(): array
     {
-        $response = $this->client->request(
-            'GET',
-            'https://api.themoviedb.org/3/tv/top_rated',
-            [
-                'query' => [
-                    'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
-                    'page' => 1
+        try {
+            $response = $this->client->request(
+                'GET',
+                'https://api.themoviedb.org/3/tv/top_rated',
+                [
+                    'query' => [
+                        'api_key' => $this->apiKey,
+                        'language' => 'fr-FR',
+                        'page' => 1
+                    ]
                 ]
-            ]
-        );
+            );
 
-        return $response->toArray();
+            $data = $response->toArray();
+
+            return $data['results'] ?? [];
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }
