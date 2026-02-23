@@ -14,10 +14,12 @@ class TmdbService
     private HttpClientInterface $client;
     private string $apiKey;
 
-    public function __construct(HttpClientInterface $client)
-    {
+    public function __construct(
+        HttpClientInterface $client,
+        string $tmdbApiKey
+    ) {
         $this->client = $client;
-        $this->apiKey = $_ENV['TMDB_API_KEY'];
+        $this->apiKey = $tmdbApiKey;
     }
 
     public function getTopRatedMovies(): array
@@ -40,7 +42,7 @@ class TmdbService
             return $data['results'] ?? [];
 
         } catch (\Exception $e) {
-            return [];
+            throw new \RuntimeException('TMDB API error');
         }
     }
     public function getTopRatedTv(): array
@@ -62,7 +64,7 @@ class TmdbService
 
             return $data['results'] ?? [];
         } catch (\Exception $e) {
-            return [];
+            throw new \RuntimeException('TMDB API error');
         }
     }
 }
