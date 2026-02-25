@@ -44,4 +44,31 @@ class ApiController extends AbstractController
             ], 500);
         }
     }
+
+    #[Route('/api/search', methods: ['GET'])]
+    public function search(TmdbService $tmdbService, \Symfony\Component\HttpFoundation\Request $request): JsonResponse
+    {
+        $query = $request->query->get('query');
+
+        if (!$query) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Missing search query'
+            ], 400);
+        }
+
+        try {
+            return $this->json([
+                'status' => 'success',
+                'data' => $tmdbService->search($query)
+            ]);
+        } catch (\RuntimeException $e) {
+            return $this->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
+
+

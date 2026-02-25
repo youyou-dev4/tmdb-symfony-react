@@ -1,8 +1,7 @@
 import React from "react";
 
-function MediaCard({ item, type }) {
-  const title = type === "movie" ? item.title : item.name;
-
+function Card({ item, type }) {
+  const title = item.title || item.name;
   return (
     <div style={cardStyle}>
       <img
@@ -25,4 +24,4 @@ const cardStyle = {
   textAlign: "center",
 };
 
-export default MediaCard;
+export default Card;

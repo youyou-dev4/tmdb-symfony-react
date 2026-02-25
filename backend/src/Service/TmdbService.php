@@ -14,10 +14,8 @@ class TmdbService
     private HttpClientInterface $client;
     private string $apiKey;
 
-    public function __construct(
-        HttpClientInterface $client,
-        string $tmdbApiKey
-    ) {
+    public function __construct( HttpClientInterface $client, string $tmdbApiKey)
+    {
         $this->client = $client;
         $this->apiKey = $tmdbApiKey;
     }
@@ -45,6 +43,7 @@ class TmdbService
             throw new \RuntimeException('TMDB API error');
         }
     }
+
     public function getTopRatedTv(): array
     {
         try {
@@ -67,4 +66,31 @@ class TmdbService
             throw new \RuntimeException('TMDB API error');
         }
     }
+
+    public function search(string $query): array
+    {
+        try {
+            $response = $this->client->request(
+                'GET',
+                'https://api.themoviedb.org/3/search/multi',
+                [
+                    'query' => [
+                        'api_key' => $this->apiKey,
+                        'language' => 'fr-FR',
+                        'query' => $query,
+                        'page' => 1
+                    ]
+                ]
+            );
+
+            $data = $response->toArray();
+
+            return $data['results'] ?? [];
+        } catch (\Exception $e) {
+            throw new \RuntimeException('TMDB search error');
+        }
+    }
 }
+
+
+    
