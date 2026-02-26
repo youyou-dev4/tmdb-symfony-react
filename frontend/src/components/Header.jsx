@@ -7,7 +7,7 @@ function Header() {
   const navigate = useNavigate();
 
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("theme") === "light";
+    return localStorage.getItem("theme") !== "light";
   });
 
   useEffect(() => {
@@ -29,7 +29,6 @@ function Header() {
   return (
     <header className="header">
 
-      {/* Logo TMDB cliquable */}
       <img
         src={tmdbLogo}
         alt="TMDB Logo"
@@ -41,7 +40,7 @@ function Header() {
         <form className="search-form" onSubmit={handleSearch}>
           <input
             type="text"
-            placeholder="Search movies or TV..."
+            placeholder="Search movies or TV Shows..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="search-input"

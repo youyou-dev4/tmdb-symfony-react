@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     container_name: tmdb_backend
     ports:
       - "8000:8000"
@@ -11,3 +10,14 @@ services:
       - ./backend:/app
     environment:
       - TMDB_API_KEY=${TMDB_API_KEY}
+
+  frontend:
+    build: ./frontend
+    container_name: tmdb_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules 
+    stdin_open: true 
+    tty: true

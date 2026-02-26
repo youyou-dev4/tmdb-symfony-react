@@ -23,7 +23,7 @@ class TmdbService
             [
                 'query' => [
                     'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
+                    'language' => 'en-US',
                     'page' => $page
                 ]
             ]
@@ -46,7 +46,7 @@ class TmdbService
             [
                 'query' => [
                     'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
+                    'language' => 'en-US',
                     'page' => $page
                 ]
             ]
@@ -69,7 +69,7 @@ class TmdbService
             [
                 'query' => [
                     'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
+                    'language' => 'en-US',
                     'query' => $query,
                     'page' => $page
                 ]
