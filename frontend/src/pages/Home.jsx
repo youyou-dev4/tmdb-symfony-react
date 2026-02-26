@@ -6,100 +6,126 @@ import Modal from "../components/Modal";
 
 function Home() {
   const navigate = useNavigate();
-
   const [movies, setMovies] = useState([]);
   const [tvShows, setTvShows] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [searchPage, setSearchPage] = useState(1);
-
   const [selectedItem, setSelectedItem] = useState(null);
+  const [heroItem, setHeroItem] = useState(null);
 
   useEffect(() => {
-    fetchTopRated();
+  const fetchData = async () => {
+      try {
+        const [moviesRes, tvRes] = await Promise.all([
+          fetch("http://localhost:8000/api/movies?page=1"),
+          fetch("http://localhost:8000/api/tv?page=1"),
+        ]);
+
+        const moviesData = await moviesRes.json();
+        const tvData = await tvRes.json();
+
+        const movies = moviesData.results ?? [];
+        const tvShows = tvData.results ?? [];
+
+        setMovies(movies);
+        setTvShows(tvShows);
+
+        if (movies.length > 0) {
+          const randomMovie =
+            movies[Math.floor(Math.random() * movies.length)];
+          setHeroItem(randomMovie);
+        }
+
+      } catch (error) {
+        console.error("Erreur lors du fetch :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const fetchTopRated = async () => {
-    const moviesRes = await fetch("http://localhost:8000/api/movies?page=1");
-    const moviesData = await moviesRes.json();
-    setMovies(moviesData.data || []);
-
-    const tvRes = await fetch("http://localhost:8000/api/tv?page=1");
-    const tvData = await tvRes.json();
-    setTvShows(tvData.data || []);
-
-    setLoading(false);
-  };
-
-  const handleSearch = async (page = 1) => {
-    if (!searchQuery) return;
-
-    setHasSearched(true);
-    setSearchLoading(true);
-    setSearchPage(page);
-
-    const res = await fetch(
-      `http://localhost:8000/api/search?query=${encodeURIComponent(
-        searchQuery
-      )}&page=${page}`
-    );
-
-    const data = await res.json();
-    setSearchResults(data.data || []);
-    setSearchLoading(false);
-  };
+  
 
   if (loading) return <Spinner />;
 
   return (
-    <div style={{ padding: "20px", background: "#121212", minHeight: "100vh", color: "white" }}>
-      <h1>TMDB Explorer</h1>
+    <div className="home">
 
       <Modal item={selectedItem} onClose={() => setSelectedItem(null)} />
 
-      {/* SEARCH BAR */}
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => {
-          setSearchQuery(e.target.value);
-          if (e.target.value === "") setHasSearched(false);
-        }}
-        placeholder="Search..."
-      />
-      <button onClick={() => handleSearch(1)}>Search</button>
+      {heroItem && (
+        <div
+          className="hero"
+          style={{
+            backgroundImage: `url(https://image.tmdb.org/t/p/w1280${heroItem.backdrop_path})`
+          }}
+        >
+          <div className="hero-overlay">
 
-      {searchLoading && <Spinner />}
+            <div className="hero-content">
+              <p className="hero-label">⭐ Top Rated</p>
 
-      {/* SEARCH RESULTS */}
-      {hasSearched && !searchLoading && (
-        <>
-          <Section title={`Search Results - Page ${searchPage}`} items={searchResults} onItemClick={setSelectedItem} />
+              {/*Présentation de site*/}
+              <div className="hero-intro">
+                <p>
+                  Discover the <span>best rated movies and TV shows</span> from around the world. 
+                  Browse top titles, explore details, and search any movie or series instantly.
+                </p>
+              </div>
 
-          <button disabled={searchPage === 1} onClick={() => handleSearch(searchPage - 1)}>
-            Previous
-          </button>
+              <h1 className="hero-title">
+                {heroItem.title}
+              </h1>
+              <p className="hero-subtitle">
+                {/* On limite 160 caractères pour pas surcharger */}
+                {heroItem.overview?.slice(0, 160)}...
+              </p>
 
-          <button onClick={() => handleSearch(searchPage + 1)}>
-            Next
-          </button>
-        </>
+              <div className="hero-actions">
+                {/* Ouvre la modal du film */}
+                <button
+                  className="hero-btn-primary"
+                  onClick={() => setSelectedItem(heroItem)}
+                >
+                  ▶ More Details
+                </button>
+
+                {/* Va vers la page des films */}
+                <button
+                  className="hero-btn-secondary"
+                  onClick={() => navigate("/movies")}
+                >
+                  Browse All Movies
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
       )}
 
-      {/* TOP RATED */}
-      {!hasSearched && (
-        <>
-          <Section title="Top Rated Movies" items={movies} onItemClick={setSelectedItem} />
-          <button onClick={() => navigate("/movies")}>View More Movies</button>
 
-          <Section title="Top Rated TV Shows" items={tvShows} onItemClick={setSelectedItem} />
-          <button onClick={() => navigate("/tv")}>View More TV Shows</button>
-        </>
-      )}
+      {/*Section film*/}
+      <div className="home-section">
+        <Section title="Top Rated Movies" items={movies} onItemClick={setSelectedItem} />
+        <div className="home-btn-wrapper">
+          <button className="btn-more" onClick={() => navigate("/movies")}>
+            View More Movies
+          </button>
+        </div>
+      </div>
+
+      {/* ---- Section Séries ---- */}
+      <div className="home-section">
+        <Section title="Top Rated TV Shows" items={tvShows} onItemClick={setSelectedItem} />
+        <div className="home-btn-wrapper">
+          <button className="btn-more" onClick={() => navigate("/tv")}>
+            View More TV Shows
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }

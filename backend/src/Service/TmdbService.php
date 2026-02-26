@@ -30,7 +30,12 @@ class TmdbService
         );
 
         $data = $response->toArray();
-        return $data['results'] ?? [];
+        return [
+            'results' => $data['results'] ?? [],
+            'page' => $data['page'] ?? 1,
+            'total_pages' => $data['total_pages'] ?? 1,
+            'total_results' => $data['total_results'] ?? 0,
+        ];
     }
 
     public function getTopRatedTv(int $page = 1): array
@@ -48,7 +53,12 @@ class TmdbService
         );
 
         $data = $response->toArray();
-        return $data['results'] ?? [];
+        return [
+            'results' => $data['results'] ?? [],
+            'page' => $data['page'] ?? 1,
+            'total_pages' => $data['total_pages'] ?? 1,
+            'total_results' => $data['total_results'] ?? 0,
+        ];
     }
 
     public function search(string $query, int $page = 1): array
@@ -67,6 +77,11 @@ class TmdbService
         );
 
         $data = $response->toArray();
-        return $data['results'] ?? [];
+        return [
+            'results' => $data['results'] ?? [],
+            'page' => $data['page'] ?? 1,
+            'total_pages' => $data['total_pages'] ?? 1,
+            'total_results' => $data['total_results'] ?? 0,
+        ];
     }
 }

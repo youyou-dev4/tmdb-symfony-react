@@ -15,9 +15,14 @@ class ApiController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
+        $data = $tmdbService->getTopRatedMovies($page);
+
         return $this->json([
             'status' => 'success',
-            'data' => $tmdbService->getTopRatedMovies($page)
+            'results' => $data['results'],
+            'page' => $data['page'],
+            'total_pages' => $data['total_pages'],
+            'total_results' => $data['total_results'],
         ]);
     }
 
@@ -26,9 +31,14 @@ class ApiController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
+        $data = $tmdbService->getTopRatedTv($page);
+
         return $this->json([
             'status' => 'success',
-            'data' => $tmdbService->getTopRatedTv($page)
+            'results' => $data['results'],
+            'page' => $data['page'],
+            'total_pages' => $data['total_pages'],
+            'total_results' => $data['total_results'],
         ]);
     }
 
@@ -45,9 +55,14 @@ class ApiController extends AbstractController
             ], 400);
         }
 
+        $data = $tmdbService->search($query, $page);
+
         return $this->json([
             'status' => 'success',
-            'data' => $tmdbService->search($query, $page)
+            'results' => $data['results'],
+            'page' => $data['page'],
+            'total_pages' => $data['total_pages'],
+            'total_results' => $data['total_results'],
         ]);
     }
 }
