@@ -15,6 +15,10 @@ function SearchPage() {
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  useEffect(() => {
     if (!query) return;
     const fetchData = async () => {
     try {
@@ -39,6 +43,8 @@ function SearchPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page, query]);
+
+  
 
   return (
     <div className="page">
