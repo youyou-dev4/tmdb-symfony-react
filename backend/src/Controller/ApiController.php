@@ -5,50 +5,38 @@ namespace App\Controller;
 use App\Service\TmdbService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * Controleur API responsable de fournir les donnees TMDB au frontend
- * Expose des endpoints REST pour recuperer les films et series les mieux notes
- */
 class ApiController extends AbstractController
 {
     #[Route('/api/movies', methods: ['GET'])]
-    public function movies(TmdbService $tmdbService): JsonResponse
+    public function movies(TmdbService $tmdbService, Request $request): JsonResponse
     {
-        try{
-            return $this->json([
-                'status' => 'success',
-                'data' => $tmdbService->getTopRatedMovies()
-            ]);
-        } catch (\RuntimeException $e) {
+        $page = $request->query->getInt('page', 1);
+
         return $this->json([
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ], 500);
-        }
+            'status' => 'success',
+            'data' => $tmdbService->getTopRatedMovies($page)
+        ]);
     }
 
     #[Route('/api/tv', methods: ['GET'])]
-    public function tv(TmdbService $tmdbService): JsonResponse
+    public function tv(TmdbService $tmdbService, Request $request): JsonResponse
     {
-        try{
-            return $this->json([
-                'status' => 'success',
-                'data' => $tmdbService->getTopRatedTv()
-            ]);
-        }catch (\RuntimeException $e) {
-            return $this->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
-        }
+        $page = $request->query->getInt('page', 1);
+
+        return $this->json([
+            'status' => 'success',
+            'data' => $tmdbService->getTopRatedTv($page)
+        ]);
     }
 
     #[Route('/api/search', methods: ['GET'])]
-    public function search(TmdbService $tmdbService, \Symfony\Component\HttpFoundation\Request $request): JsonResponse
+    public function search(TmdbService $tmdbService, Request $request): JsonResponse
     {
         $query = $request->query->get('query');
+        $page = $request->query->getInt('page', 1);
 
         if (!$query) {
             return $this->json([
@@ -57,18 +45,9 @@ class ApiController extends AbstractController
             ], 400);
         }
 
-        try {
-            return $this->json([
-                'status' => 'success',
-                'data' => $tmdbService->search($query)
-            ]);
-        } catch (\RuntimeException $e) {
-            return $this->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
-        }
+        return $this->json([
+            'status' => 'success',
+            'data' => $tmdbService->search($query, $page)
+        ]);
     }
 }
-
-
