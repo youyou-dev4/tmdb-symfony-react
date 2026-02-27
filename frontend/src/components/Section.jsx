@@ -2,6 +2,8 @@ import React from "react";
 import Card from "./Card";
 
 function Section({ title, items, onItemClick }) {
+
+  
   return (
     <div className="section">
 
@@ -9,6 +11,7 @@ function Section({ title, items, onItemClick }) {
 
       <div className="section-grid">
         {items.map((item) => (
+          
           <Card
             key={item.id}
             item={item}
