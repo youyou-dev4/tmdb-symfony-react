@@ -9,7 +9,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 COPY . .
-RUN composer install --no-interaction --prefer-dist
+
+RUN echo "APP_ENV=prod" > .env && \
+    echo "APP_SECRET=changeme" >> .env && \
+    echo "TMDB_API_KEY=" >> .env && \
+    echo "DEFAULT_URI=http://localhost:8000" >> .env
+
+RUN composer install --no-interaction --prefer-dist --no-scripts
+
+RUN composer dump-autoload --optimize
 
 EXPOSE 8000
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]

@@ -722,3 +722,50 @@ body.light .hero-stat span {
 }
 
 
+/* ===== FOOTER ===== */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background-color: rgba(13, 37, 63, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(1, 180, 228, 0.2);  /* même ligne que le header */
+  margin-top: auto;
+}
+
+.footer-copy {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+}
+
+.footer-github, .footer-copy {
+  color: #01b4e4;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footer-github:hover {
+  opacity: 0.75;
+}
+
+/* Light mode */
+body.light .footer {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+
+
+/* Responsive */
+@media (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding: 16px;
+  }
+}
+
+
